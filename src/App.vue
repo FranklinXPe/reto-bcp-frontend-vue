@@ -1,60 +1,53 @@
 <template>
   <v-app>
-    <v-app-bar
-      app
-      color="primary"
-      dark
-    >
-      <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
-      </div>
-
+    <v-app-bar app color="primary" dark>
+      <v-toolbar-title>BCP Tipo de cambio</v-toolbar-title>
       <v-spacer></v-spacer>
-
       <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
+        v-for="link in links"
+        :key="`${link.label}-header-link`"
         text
+        rounded
+        :to="link.url"
+        >{{ link.label }}</v-btn
       >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
     </v-app-bar>
 
+    <NavBarGuest v-if="loggedIn" />
+
     <v-content>
-      <HelloWorld/>
+      <router-view></router-view>
     </v-content>
+
+    <v-footer color="primary lighten-1" padless>
+      <v-row>
+        <v-col class="primary lighten-2 py-4 text-center white--text" cols="12">
+          Junio - {{ new Date().getFullYear() }} —
+          <strong>Reto BCP</strong>
+        </v-col>
+      </v-row>
+    </v-footer>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import NavBarGuest from "@/components/NavBarGuest.vue";
+import { authComputed } from "@/store/helpers.js";
 
 export default {
-  name: 'App',
+  name: "App",
 
-  components: {
-    HelloWorld,
-  },
+  components: { NavBarGuest },
 
   data: () => ({
-    //
+    showPassword: false,
+    links: [
+      { icon: "mdi-login-variant", text: "Login", route: "/login" },
+      { icon: "mdi-view-dashboard", text: "Home", route: "/home" },
+    ],
   }),
+  computed: {
+    ...authComputed,
+  },
 };
 </script>
